@@ -29,7 +29,7 @@ try {
 } catch (e) {
     console.log('id_ip_dic file not exist.');
 }
-console.log(id_ip_dic);
+// console.log(id_ip_dic);
 
 udpSocket.on('message', (message, rinfo) => {
     console.log('udpsocket received:', rinfo.address, rinfo.port, 'message:', message.toString('hex'));
