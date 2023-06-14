@@ -34,9 +34,9 @@ try {
 udpSocket.on('message', (message, rinfo) => {
     console.log('udpsocket received:', rinfo.address, rinfo.port, 'message:', message.toString('hex'));
     if (rinfo.address == MY_IP_ADDRESS) {
-        // console.log('ucasts my ip address');
+        console.log('ucasts my ip address');
     } else {
-        // console.log('ucast other ip address');
+        console.log('ucast other ip address');
         serialPort.write(message, (err) => {
             if (err) {
                 console.error('Serial port write error:', err);
@@ -49,9 +49,9 @@ udpSocket.on('message', (message, rinfo) => {
 bcastSocket.on('message', (message, rinfo) => {
     console.log('bcastsocket received:', rinfo.address, rinfo.port, 'message:', message.toString('hex'));
     if (rinfo.address == MY_IP_ADDRESS) {
-        // console.log('bcast my ip address');
+        console.log('bcast my ip address');
     } else {
-        // console.log('bcast other ip address');
+        console.log('bcast other ip address');
         serialPort.write(message, (err) => {
             if (err) {
                 console.error('Serial port write error:', err);
@@ -70,7 +70,6 @@ serialPort.on('data', (data) => {
     console.log('serial received:' + data.toString('hex'));
     size = data.length
     console.log('size:', size);
-    // if (size > 0) {
     buffer_array = Buffer.concat([buffer_array, data]);
     console.log('buffer', buffer_array);
     try {
@@ -80,14 +79,6 @@ serialPort.on('data', (data) => {
                 if ((buffer_array.length - (i)) >= buffer_array[i + 2] + 12) {
                     k = buffer_array[i + 2] + 12;
                     console.log('k value', k);
-
-                    // if (i > 0) {
-                    //     console.log('####### before del', buffer_array);
-                    //     buffer_array = buffer_array.slice(i, buffer_array.length);
-                    //     temp_array = buffer_array.slice(i, buffer_array.length);
-                    //     console.log('####### after del', buffer_array);
-                    //     // break;
-                    // }
 
                     if (i + k <= buffer_array.length) {
                         console.log('parsing');
@@ -129,24 +120,18 @@ serialPort.on('data', (data) => {
                                 if (temp_array[i] == 0xaa && temp_array[i + 1] == 0x55) {
                                     if ((temp_array.length - (i)) >= temp_array[i + 2] + 12) {
                                         k = temp_array[i + 2] + 12;
-                                        console.log('k value', k);
+                                        buffer_array = Buffer.alloc(0);
 
-                                        // if (i > 0) {
-                                        //     console.log('####### before del', buffer_array);
-                                        //     buffer_array = buffer_array.slice(i, buffer_array.length);
-                                        //     temp_array = buffer_array.slice(i, buffer_array.length);
-                                        //     console.log('####### after del', buffer_array);
-                                        //     // break;
-                                        // }
+                                        console.log('temp k value', k);
 
                                         if (i + k <= temp_array.length) {
-                                            console.log('parsing');
+                                            console.log('temp parsing');
                                             tdl = temp_array.slice(i, k);
-                                            console.log('parsing data', tdl.toString('hex'));
+                                            console.log('temp parsing data', tdl.toString('hex'));
                                             temp_array = temp_array.slice(k, temp_array.length);
 
                                             if (tdl.length > 0) {
-                                                console.log('header1', tdl[0].toString(16), 'header2', tdl[1].toString(16), 'payload length', tdl[2], 'packet sequence', tdl[3], 'source ID', tdl[4], 'port', tdl[5], 'destination ID', tdl[6],
+                                                console.log('temp header1', tdl[0].toString(16), 'header2', tdl[1].toString(16), 'payload length', tdl[2], 'packet sequence', tdl[3], 'source ID', tdl[4], 'port', tdl[5], 'destination ID', tdl[6],
                                                     'port', tdl[7], 'packet priority', tdl[8], 'message Id', tdl[9]);
 
                                                 id = tdl[6];
@@ -161,7 +146,7 @@ serialPort.on('data', (data) => {
                                                     });
                                                 } else {
                                                     ip = id_ip_dic[id.toString()];
-                                                    console.log('id', id, 'ip', ip);
+                                                    console.log('temp id', id, 'ip', ip);
                                                     //send_unicast();
                                                     udpSocket.send(tdl, 0, tdl.length, UCAST_PORT, ip, (err) => {
                                                         if (err) {
@@ -174,10 +159,9 @@ serialPort.on('data', (data) => {
                                     }
                                 }
                             }
-                        } catch { }
+                        } catch { 
 
-
-
+                        }
                     }
                 }
             }
@@ -185,9 +169,6 @@ serialPort.on('data', (data) => {
     } catch {
 
     }
-    // }
-
-
 });
 
 udpSocket.on('listening', () => {
