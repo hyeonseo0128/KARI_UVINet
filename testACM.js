@@ -34,9 +34,9 @@ try {
 udpSocket.on('message', (message, rinfo) => {
     console.log('udpsocket received:', rinfo.address, rinfo.port, 'message:', message.toString('hex'));
     if (rinfo.address == MY_IP_ADDRESS) {
-        console.log('ucasts my ip address');
+        // console.log('ucasts my ip address');
     } else {
-        console.log('ucast other ip address');
+        // console.log('ucast other ip address');
         serialPort.write(message, (err) => {
             if (err) {
                 console.error('Serial port write error:', err);
@@ -49,9 +49,9 @@ udpSocket.on('message', (message, rinfo) => {
 bcastSocket.on('message', (message, rinfo) => {
     console.log('bcastsocket received:', rinfo.address, rinfo.port, 'message:', message.toString('hex'));
     if (rinfo.address == MY_IP_ADDRESS) {
-        console.log('bcast my ip address');
+        // console.log('bcast my ip address');
     } else {
-        console.log('bcast other ip address');
+        // console.log('bcast other ip address');
         serialPort.write(message, (err) => {
             if (err) {
                 console.error('Serial port write error:', err);
@@ -72,18 +72,18 @@ serialPort.on('data', (data) => {
     console.log('buffer', buffer_array);
     try {
         let i = 0;
-        if ((buffer_array.length - (i)) >= buffer_array[i + 2] + 12) {
-            if (buffer_array[i] == 0xaa && buffer_array[i + 1] == 0x55) {
-                if ((buffer_array.length - (i)) >= buffer_array[i + 2] + 12) {
-                    k = buffer_array[i + 2] + 12;
-                    console.log('k value', k);
+        for (let i = 0; i < buffer_array.length; i++) {
+            if ((buffer_array.length - (i)) >= buffer_array[i + 2] + 12) {
+                if (buffer_array[i] == 0xaa && buffer_array[i + 1] == 0x55) {
+                    if ((buffer_array.length - (i)) >= buffer_array[i + 2] + 12) {
+                        k = buffer_array[i + 2] + 12;
+                        console.log('k value', k);
 
-                    // try {
                         if (i > 0) {
                             console.log('####### before del', buffer_array);
                             buffer_array = buffer_array.slice(i, buffer_array.length);
                             console.log('####### after del', buffer_array);
-                            // break;
+                            break;
                         }
 
                         if (i + k <= buffer_array.length) {
@@ -118,12 +118,9 @@ serialPort.on('data', (data) => {
                                 }
                             }
                         }
-                    // } catch {
-                    //     console.log('message parse error!');
-                    // }
+                    }
                 }
             }
-
         }
     } catch {
 
