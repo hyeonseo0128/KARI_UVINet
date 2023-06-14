@@ -82,46 +82,50 @@ serialPort.on('data', (data) => {
                         k = buffer_array[i + 2] + 12;
                         //console.log('k value', k);
 
-                        if (i > 0) {
-                            console.log('####### before del', buffer_array);
-                            buffer_array = buffer_array.slice(i, buffer_array.length);
-                            console.log('####### after del', buffer_array);
-                            break;
-                        }
+                        try {
+                            if (i > 0) {
+                                console.log('####### before del', buffer_array);
+                                buffer_array = buffer_array.slice(i, buffer_array.length);
+                                console.log('####### after del', buffer_array);
+                                break;
+                            }
 
-                        if (i + k <= buffer_array.length) {
-                            //console.log('parsing');
-                            dl = buffer_array.slice(i, k);
-                            //console.log('parsing data', dl.toString('hex'));
-                            buffer_array = buffer_array.slice(k, buffer_array.length);
+                            if (i + k <= buffer_array.length) {
+                                //console.log('parsing');
+                                dl = buffer_array.slice(i, k);
+                                //console.log('parsing data', dl.toString('hex'));
+                                buffer_array = buffer_array.slice(k, buffer_array.length);
 
-                            if (dl.length > 0) {
-                                console.log('header1', dl[0].toString(16), 'header2', dl[1].toString(16), 'payload length', dl[2], 'packet sequence', dl[3], 'source ID', dl[4], 'port', dl[5], 'destination ID', dl[6],
-                                    'port', dl[7], 'packet priority', dl[8], 'message Id', dl[9]);
+                                if (dl.length > 0) {
+                                    console.log('header1', dl[0].toString(16), 'header2', dl[1].toString(16), 'payload length', dl[2], 'packet sequence', dl[3], 'source ID', dl[4], 'port', dl[5], 'destination ID', dl[6],
+                                        'port', dl[7], 'packet priority', dl[8], 'message Id', dl[9]);
 
-                                id = dl[6];
-                                if (id == 255) {
+                                    id = dl[6];
+                                    if (id == 255) {
+                                        ip = id_ip_dic[id.toString()];
+                                        console.log('id', id, 'ip', ip);
+                                        //send_broadcast();
+                                        bcastSocket.send(dl, 0, dl.length, BCAST_PORT, BCAST_HOST, (err) => {
+                                            if (err) {
+                                                console.error('BCAST send error:', err);
+                                            }
+                                        });
+
+                                        break;
+                                    }
+
                                     ip = id_ip_dic[id.toString()];
                                     console.log('id', id, 'ip', ip);
-                                    //send_broadcast();
-                                    bcastSocket.send(dl, 0, dl.length, BCAST_PORT, BCAST_HOST, (err) => {
+                                    //send_unicast();
+                                    udpSocket.send(dl, 0, dl.length, UCAST_PORT, ip, (err) => {
                                         if (err) {
-                                            console.error('BCAST send error:', err);
+                                            console.error('UCAST send error:', err);
                                         }
                                     });
-
-                                    break;
                                 }
-
-                                ip = id_ip_dic[id.toString()];
-                                console.log('id', id, 'ip', ip);
-                                //send_unicast();
-                                udpSocket.send(dl, 0, dl.length, UCAST_PORT, ip, (err) => {
-                                    if (err) {
-                                        console.error('UCAST send error:', err);
-                                    }
-                                });
                             }
+                        } catch {
+                            console.log('message parse error!');
                         }
                     }
                 }
