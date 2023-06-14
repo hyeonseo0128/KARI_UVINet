@@ -73,6 +73,8 @@ serialPort.on('data', (data) => {
     try {
         let i = 0;
         for (let i = 0; i < buffer_array.length; i++) {
+            console.time('parse');
+
             if ((buffer_array.length - (i)) >= buffer_array[i + 2] + 12) {
                 if (buffer_array[i] == 0xaa && buffer_array[i + 1] == 0x55) {
                     if ((buffer_array.length - (i)) >= buffer_array[i + 2] + 12) {
@@ -120,7 +122,11 @@ serialPort.on('data', (data) => {
                         }
                     }
                 }
+            } else {
+                break;
             }
+            console.time('parse');
+
         }
     } catch {
 
