@@ -5,9 +5,9 @@ const fs = require("fs");
 const broadcastAddress = require('broadcast-address');
 
 const UCAST_HOST = '127.0.0.1';
-const UCAST_PORT = 20001;
+const UCAST_PORT = 20002;
 const BCAST_HOST = broadcastAddress('eth0');
-const BCAST_PORT = 20002;
+const BCAST_PORT = 20004;
 const SERIAL_PORT = '/dev/ttyTHS1';
 const BAUD_RATE = 115200;
 
