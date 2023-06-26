@@ -83,21 +83,21 @@ serialPort.on('data', (data) => {
         if ((buffer_array.length) >= buffer_array[2] + 12) {
             if (buffer_array[0] == 0xaa && buffer_array[1] == 0x55) {
                 data_length = buffer_array[2] + 12;
-                console.log(`${count} k value`, k);
+                console.log('k value', k);
 
                 UXV_data = buffer_array.slice(0, data_length);
-                console.log(`${count} parsing data`, UXV_data.toString('hex'));
+                console.log('parsing data', UXV_data.toString('hex'));
                 buffer_array = buffer_array.slice(data_length, UXV_data.length);
 
 
                 if (UXV_data.length > 0) {
-                    console.log(`${count}`, 'header1', UXV_data[0].toString(16), 'header2', UXV_data[1].toString(16), 'payload length', UXV_data[2], 'packet sequence', UXV_data[3], 'source ID', UXV_data[4], 'port', UXV_data[5], 'destination ID', UXV_data[6],
+                    console.log('header1', UXV_data[0].toString(16), 'header2', UXV_data[1].toString(16), 'payload length', UXV_data[2], 'packet sequence', UXV_data[3], 'source ID', UXV_data[4], 'port', UXV_data[5], 'destination ID', UXV_data[6],
                         'port', UXV_data[7], 'packet priority', UXV_data[8], 'message Id', UXV_data[9]);
 
                     id = UXV_data[6];
                     if (id == 255) {
                         ip = id_ip_dic[id.toString()];
-                        console.log(`${count} id, ip`, id, ip);
+                        console.log('id, ip', id, ip);
                         //send_broadcast();
                         bcastSocket.send(UXV_data, 0, UXV_data.length, BCAST_PORT, BCAST_HOST, (err) => {
                             if (err) {
@@ -106,7 +106,7 @@ serialPort.on('data', (data) => {
                         });
                     } else {
                         ip = id_ip_dic[id.toString()];
-                        console.log(`${count} id, ip`, id, ip);
+                        console.log('id, ip', id, ip);
                         //send_unicast();
                         udpSocket.send(UXV_data, 0, UXV_data.length, UCAST_PORT, ip, (err) => {
                             if (err) {
