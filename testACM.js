@@ -83,7 +83,7 @@ serialPort.on('data', (data) => {
         if ((buffer_array.length) >= buffer_array[2] + 12) {
             if (buffer_array[0] == 0xaa && buffer_array[1] == 0x55) {
                 data_length = buffer_array[2] + 12;
-                console.log('k value', k);
+                // console.log('k value', k);
 
                 UXV_data = buffer_array.slice(0, data_length);
                 console.log('parsing data', UXV_data.toString('hex'));
