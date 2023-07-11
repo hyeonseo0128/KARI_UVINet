@@ -79,8 +79,9 @@ serialPort.on('data', (data) => {
     // k -> data_length    dl -> UXV_data
 
     while (true) {
-        if ((buffer_array.length) >= buffer_array[2] + 12) {
-            if (buffer_array[0] == 0xaa && buffer_array[1] == 0x55) {
+        if (buffer_array[0] == 0xaa && buffer_array[1] == 0x55) {
+            if ((buffer_array.length) >= buffer_array[2] + 12) {
+
                 data_length = buffer_array[2] + 12;
                 // console.log('k value', k);
 
@@ -115,13 +116,11 @@ serialPort.on('data', (data) => {
                     }
                 }
             } else {
-                buffer_array = buffer_array.slice(1, buffer_array.length);
                 break;
             }
         } else {
-            count = 0;
+            buffer_array = buffer_array.slice(1, buffer_array.length);
             break;
-
         }
 
     }
