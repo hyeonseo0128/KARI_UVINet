@@ -116,6 +116,7 @@ serialPort.on('data', (data) => {
                 }
             } else {
                 buffer_array = buffer_array.slice(1, buffer_array.length);
+                break;
             }
         } else {
             count = 0;
