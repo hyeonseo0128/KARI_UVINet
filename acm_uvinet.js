@@ -119,8 +119,10 @@ serialPort.on('data', (data) => {
                 break;
             }
         } else {
+            if ( buffer_array.length == 0) {
+                break;
+            }
             buffer_array = buffer_array.slice(1, buffer_array.length);
-            break;
         }
 
     }
