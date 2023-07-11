@@ -79,7 +79,6 @@ serialPort.on('data', (data) => {
     // k -> data_length    dl -> UXV_data
 
     while (true) {
-        let count = 0;
         if ((buffer_array.length) >= buffer_array[2] + 12) {
             if (buffer_array[0] == 0xaa && buffer_array[1] == 0x55) {
                 data_length = buffer_array[2] + 12;
@@ -116,9 +115,6 @@ serialPort.on('data', (data) => {
                     }
                 }
             }
-        } else {
-            count = 0;
-            break;
         }
     }
 });
